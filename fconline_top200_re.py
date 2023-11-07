@@ -1,11 +1,13 @@
 import selenium
 import time
 import random 
-
+import requests
 
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
 from bs4 import BeautifulSoup 
 
@@ -69,22 +71,54 @@ for each in name_list :
 
 
 
+c_url = driver.current_url 
+
+response = requests.get(url)
+time.sleep(4)
+
+soup = BeautifulSoup(response.text, 'html.parser')
+info_top = soup.find('div', class_="info_top")
+
+
+
+
+pid = info_top.find('input', type="hidden")
+print(pid)
+print('---------')
+print(pid.text)
+
+
+
+
+
+
+
+
+
+
+
+
+"""
 # player_id 를 수집하기 bs4 로 하기 
 
 c_url = driver.current_url 
-soup = BeautifulSoup(c_url, 'html.parser')
 
-txt_list = soup.find("div", "info_top")
-print(txt_list.text) 
+response = requests.get(url)
+time.sleep(4)
+
+soup = BeautifulSoup(response.text, 'html.parser')
+print(soup.text)
+
+with open('soup.txt', 'w', encoding='UTF-8') as f :
+    f.write(soup.text) 
+d_plist = soup.find('div', class_='player_list')
+hidden_input = d_plist.find('input', type = "hidden")
+print(hidden_input.text)
+"""
 
 
 
 
-for info_element in info_elements :
-    class_name_list = info_element.get_attribute('class') 
-    
-    pid = (class_name_list[-1].split('_'))[-1] 
-    print(pid) 
 
 
 """
@@ -142,8 +176,6 @@ print(player_list)
 with open('top200_player_list.txt', 'w', encoding='UTF-8') as f :
     for name in player_list :
         f.write(name[0]+" "+name[1]+"\n") 
-
-#<a href="#" onclick="DataCenter.GetPlayerDetail(this,287193301,'',2)" class="btn_detail_link"></a>
 
 
 
